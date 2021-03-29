@@ -1,0 +1,41 @@
+version: "3.7"
+
+services:
+  fpm:
+    build: # Info to build the Docker image
+      context: ./docker # Specify where the Dockerfile is located (e.g. in the root directory of the project)
+      dockerfile: Dockerfile-php # Specify the name of the Dockerfile
+    environment: # You can use this section to set environment variables. But you can also use the .env file.
+      - DATABASE_URL=mysql://root:root@db/docker_sf
+    volumes:
+      - ./:/var/www/project/:cached # Location of the project for php-fpm. Note this should be the same for NGINX.*
+    networks:
+      - symfony # Docker containers (services) that need to connect to each other should be on the same network.
+  nginx:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile-nginx
+    volumes:
+      - ./:/var/www/project/:cached
+    ports:
+      - 10302:80 # Ports that are exposed, you can connect to port 8001 to port 80 of the container.
+    networks:
+      - symfony
+  db: #address
+    image: mariadb:10.2.29
+    ports:
+      - "3317:3306" #outside:inside docker container from-within
+    environment:
+      - MYSQL_DATABASE=docker_sf
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - persistent:/var/lib/mysql
+      - ./docker/build/db/:/docker-entrypoint-initdb.d/
+    networks:
+    - symfony
+
+networks:
+  symfony:
+
+volumes:
+  persistent:
