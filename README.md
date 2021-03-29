@@ -6,4 +6,4 @@ Copy/past:
 - docker repository
 - add your database to docker/build/db as a zip file
 
-View full article on [meduim](https://medium.com/@aicha-fatrah/dockerize-a-symfony-project-nginx-php-fpm-and-mariadb-ab723c888394)
+View full article on [meduim](https://medium.com/@aicha-fatrah/)
